@@ -88,15 +88,16 @@ user_pref("browser.shell.checkDefaultBrowser", false);
 /* 0102: set START page (0=blank, 1=home, 2=last visited page, 3=resume previous session)
  * [NOTE] Session Restore is not used in PB mode (0110) and is cleared with history (2803, 2804)
  * [SETTING] General>Startup>Restore previous session ***/
-user_pref("browser.startup.page", 0);
+user_pref("browser.startup.page", 3);
 /* 0103: set HOME+NEWWINDOW page
  * about:home=Activity Stream (default, see 0105), custom URL, about:blank
  * [SETTING] Home>New Windows and Tabs>Homepage and new windows ***/
-user_pref("browser.startup.homepage", "about:blank");
+/* 0103 & 0104 set to about:home because of https://github.com/stoically/temporary-containers/issues/146#issuecomment-461427858 */
+user_pref("browser.startup.homepage", "about:home");
 /* 0104: set NEWTAB page
  * true=Activity Stream (default, see 0105), false=blank page
  * [SETTING] Home>New Windows and Tabs>New tabs ***/
-user_pref("browser.newtabpage.enabled", false);
+user_pref("browser.newtabpage.enabled", true);
 user_pref("browser.newtab.preload", false);
 /* 0105: disable Activity Stream stuff (AS)
  * AS is the default homepage/newtab in FF57+, based on metadata and browsing behavior.
@@ -952,13 +953,13 @@ user_pref("_user.js.parrot", "1600 syntax error: the parrot rests in peace!");
 user_pref("network.http.sendRefererHeader", 2);
 /* 1602: ALL: control the amount of information to send
  * 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port ***/
-user_pref("network.http.referer.trimmingPolicy", 0);
+user_pref("network.http.referer.trimmingPolicy", 1);
 /* 1603: CROSS ORIGIN: control when to send a referer [SETUP-WEB]
  * 0=always (default), 1=only if base domains match, 2=only if hosts match ***/
 user_pref("network.http.referer.XOriginPolicy", 1);
 /* 1604: CROSS ORIGIN: control the amount of information to send [FF52+]
  * 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port ***/
-user_pref("network.http.referer.XOriginTrimmingPolicy", 0);
+user_pref("network.http.referer.XOriginTrimmingPolicy", 1);
 /* 1605: ALL: disable spoofing a referer
  * [WARNING] Do not set this to true, as spoofing effectively disables the anti-CSRF
  * (Cross-Site Request Forgery) protections that some sites may rely on ***/
@@ -1433,7 +1434,7 @@ user_pref("network.cookie.thirdparty.nonsecureSessionOnly", true); // [FF58+]
  * 0=keep until they expire (default), 2=keep until you close Firefox
  * [NOTE] The setting below is disabled (but not changed) if you block all cookies (2701 = 2)
  * [SETTING] Privacy & Security>Cookies and Site Data>Delete cookies and site data when Firefox is closed ***/
-   // user_pref("network.cookie.lifetimePolicy", 2);
+user_pref("network.cookie.lifetimePolicy", 0);
 /* 2705: disable HTTP sites setting cookies with the "secure" directive [FF52+]
  * [1] https://developer.mozilla.org/Firefox/Releases/52#HTTP ***/
 user_pref("network.cookie.leave-secure-alone", true); // [DEFAULT: true]
@@ -1455,7 +1456,7 @@ user_pref("network.cookie.leave-secure-alone", true); // [DEFAULT: true]
  * [1] https://blog.mozilla.org/addons/2018/08/03/new-backend-for-storage-local-api/ ***/
 user_pref("dom.indexedDB.enabled", true); // [DEFAULT: true]
 /* 2730: disable offline cache ***/
-user_pref("browser.cache.offline.enable", false);
+user_pref("browser.cache.offline.enable", true);
 /* 2730b: disable offline cache on insecure sites [FF60+]
  * [1] https://blog.mozilla.org/security/2018/02/12/restricting-appcache-secure-contexts/ ***/
 user_pref("browser.cache.offline.insecure.enable", false); // [DEFAULT: false in FF62+]
@@ -1496,10 +1497,10 @@ user_pref("privacy.sanitize.sanitizeOnShutdown", true);
  * prefs when set from there, and the sanitize code may change at any time
  * [SETTING] Privacy & Security>History>Custom Settings>Clear history when Firefox closes>Settings ***/
 user_pref("privacy.clearOnShutdown.cache", true);
-user_pref("privacy.clearOnShutdown.cookies", true);
+user_pref("privacy.clearOnShutdown.cookies", false);
 user_pref("privacy.clearOnShutdown.downloads", true); // see note above
 user_pref("privacy.clearOnShutdown.formdata", true); // Form & Search History
-user_pref("privacy.clearOnShutdown.history", true); // Browsing & Download History
+user_pref("privacy.clearOnShutdown.history", false); // Browsing & Download History
 user_pref("privacy.clearOnShutdown.offlineApps", true); // Offline Website Data
 user_pref("privacy.clearOnShutdown.sessions", true); // Active Logins
 user_pref("privacy.clearOnShutdown.siteSettings", false); // Site Preferences
@@ -1756,7 +1757,7 @@ user_pref("_user.js.parrot", "4700 syntax error: the parrot's taken 'is last bow
 user_pref("_user.js.parrot", "5000 syntax error: this is an ex-parrot!");
 /* WELCOME & WHAT's NEW NOTICES ***/
    // user_pref("browser.startup.homepage_override.mstone", "ignore"); // master switch
-   // user_pref("startup.homepage_welcome_url", "");
+   user_pref("startup.homepage_welcome_url", "");
    // user_pref("startup.homepage_welcome_url.additional", "");
    // user_pref("startup.homepage_override_url", ""); // What's New page after updates
 /* WARNINGS ***/
@@ -1789,6 +1790,30 @@ user_pref("_user.js.parrot", "5000 syntax error: this is an ex-parrot!");
    // user_pref("network.manage-offline-status", false); // see bugzilla 620472
    // user_pref("reader.parse-on-load.enabled", false); // "Reader View"
    // user_pref("xpinstall.signatures.required", false); // enforced extension signing (Nightly/ESR)
+/* tya99 PREFS ***/
+
+
+/* 2505: disable media device enumeration [FF29+]
+ * [NOTE] media.peerconnection.enabled should also be set to false (see 2001)
+ * [1] https://wiki.mozilla.org/Media/getUserMedia
+ * [2] https://developer.mozilla.org/docs/Web/API/MediaDevices/enumerateDevices ***/
+
+/*
+ * 5001 Turn off some things on the activity-stream, workaround solution for
+ * https://github.com/stoically/temporary-containers/issues/146#issuecomment-461427858
+ * See also 0103 & 0104 ***/
+user_pref("browser.newtabpage.activity-stream.showSearch", false);
+user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+user_pref("browser.newtabpage.activity-stream.feeds.section.highlights", false);
+user_pref("browser.newtabpage.activity-stream.migrationExpired", true);
+/*
+ * 5002 Arrange addon buttons to be how I like them
+ */
+user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\",\"_7fc8ef53-24ec-4205-87a4-1e745953bb0d_-browser-action\",\"https-everywhere_eff_org-browser-action\",\"treestyletab_piro_sakura_ne_jp-browser-action\",\"_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"stop-reload-button\",\"home-button\",\"customizableui-special-spring1\",\"urlbar-container\",\"customizableui-special-spring2\",\"downloads-button\",\"library-button\",\"sidebar-button\",\"_c607c8df-14a7-4f28-894f-29e8722976af_-browser-action\",\"_testpilot-containers-browser-action\",\"jid1-bofifl9vbdl2zq_jetpack-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"umatrix_raymondhill_net-browser-action\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"personal-bookmarks\"]},\"seen\":[\"developer-button\",\"ublock0_raymondhill_net-browser-action\",\"umatrix_raymondhill_net-browser-action\",\"_c607c8df-14a7-4f28-894f-29e8722976af_-browser-action\",\"jid1-bofifl9vbdl2zq_jetpack-browser-action\",\"_testpilot-containers-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\",\"_7fc8ef53-24ec-4205-87a4-1e745953bb0d_-browser-action\",\"https-everywhere_eff_org-browser-action\",\"_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action\",\"treestyletab_piro_sakura_ne_jp-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"toolbar-menubar\",\"TabsToolbar\",\"PersonalToolbar\",\"widget-overflow-fixed-list\"],\"currentVersion\":15,\"newElementCount\":13}");
+/*
+ * 5003 Turn off previews
+ */
+user_pref("browser.ctrlTab.recentlyUsedOrder", false);
 
 /*** [SECTION 9999]: DEPRECATED / REMOVED / LEGACY / RENAMED
      Documentation denoted as [-]. Numbers may be re-used. See [1] for a link-clickable,
