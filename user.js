@@ -952,13 +952,13 @@ user_pref("_user.js.parrot", "1600 syntax error: the parrot rests in peace!");
 user_pref("network.http.sendRefererHeader", 2);
 /* 1602: ALL: control the amount of information to send
  * 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port ***/
-user_pref("network.http.referer.trimmingPolicy", 0);
+user_pref("network.http.referer.trimmingPolicy", 1);
 /* 1603: CROSS ORIGIN: control when to send a referer [SETUP-WEB]
  * 0=always (default), 1=only if base domains match, 2=only if hosts match ***/
 user_pref("network.http.referer.XOriginPolicy", 1);
 /* 1604: CROSS ORIGIN: control the amount of information to send [FF52+]
  * 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port ***/
-user_pref("network.http.referer.XOriginTrimmingPolicy", 0);
+user_pref("network.http.referer.XOriginTrimmingPolicy", 1);
 /* 1605: ALL: disable spoofing a referer
  * [WARNING] Do not set this to true, as spoofing effectively disables the anti-CSRF
  * (Cross-Site Request Forgery) protections that some sites may rely on ***/
