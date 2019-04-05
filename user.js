@@ -187,7 +187,7 @@ user_pref("_user.js.parrot", "0300 syntax error: the parrot's not pinin' for the
 user_pref("app.update.auto", false);
 /* 0302b: disable auto-INSTALLING extension and theme updates (after the check in 0301b)
  * [SETTING] about:addons>Extensions>[cog-wheel-icon]>Update Add-ons Automatically (toggle) ***/
-user_pref("extensions.update.autoUpdateDefault", false);
+user_pref("extensions.update.autoUpdateDefault", true);
 /* 0303: disable background update service [WINDOWS]
  * [SETTING] General>Firefox Updates>Use a background service to install updates ***/
 user_pref("app.update.service.enabled", false);
